@@ -1,0 +1,737 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js">
+</script>
+<body>
+<div class='platform' >
+<div id='player_1'  class='player_1' style=" background:black; height:355px; width:355px; position:relative; " ></div>
+<div id='player_2' class='player_2' style=" background:black; height:355px; width:355px; position:relative;" ></div>
+
+<button class='buton_change_player_1' onclick="generate_map('x','y',1)" style=" ">Change</button>
+<button class='buton_play_player_1' onclick="gray('x','y',1)" style=" ">Play</button>
+
+<button class='buton_change_player_2' onclick="generate_map('m','n',2)">Change</button>
+<button class='buton_play_player_2' onclick="gray('m','n',2)" >Play</button>
+</div>
+</br></br>
+<div id='atciot' style='postion:relative;'></div></br>
+<div id='atciot2' style='postion:relative;'></div>
+<div id='alert' style='postion:relative;'></div>
+<div id='p3a' style='postion:relative;'> </div>
+<div id='p3b' style='postion:relative;'> </div>
+
+<div id='plasa' style='postion:relative;'> </div>
+
+<script>
+var m1=0,n1=0,d;  mx=[],my=[]; player_1=[],player_2=[],player=[],test=[]; q=0;
+
+plasa("x","y",1);
+plasa("m","n",2);
+
+function plasa(g,h,p){
+for(var i=3;i<=12;i++)
+for(var j=3;j<=12;j++){
+var x=i*35+5;
+var y=j*35+5;
+$('#player_'+p).append("<div onclick='pok"+p+"(this.id)' id='"+g+''+i+''+h+''+j+"'style='background:aqua;height:30px;width:30px;position:absolute;margin-left:"+(x-105)+";margin-top:"+(y-105)+";'>"+i+" "+j+"</div>");
+}}
+
+
+function gray(g,h,p){
+
+for(var i=3;i<=12;i++)
+for(var j=3;j<=12;j++){
+var x=i*35+5;
+var y=j*35+5;
+ $('#'+g+''+i+''+h+''+j).css("background","gray");
+ $('#'+g+''+i+''+h+''+j).css("opacity","1");
+}}
+
+function generate_map(g,h,p){
+
+if(p==1)
+for(let i=0;i<=15;i++){
+player[i]={ ocupat:[], umbra:[], pok:[],sh:[] };
+player_1[i]={ ocupat:[], umbra:[], pok:[],sh:[] };
+test[i]={ ocupat:[], umbra:[], pok:[],sh:[] };
+}
+
+if(p==2)
+for(let i=0;i<=15;i++){
+player[i]={ ocupat:[], umbra:[], pok:[],sh:[] };
+player_2[i]={ ocupat:[], umbra:[], pok:[],sh:[] };
+test[i]={ ocupat:[], umbra:[], pok:[],sh:[] };
+}
+
+var f=5;
+p4(f-2,f-1,f,f+1,f+7,f+8,7,2);
+f=4;
+p4(f-2,f-1,f,f+1,f+6,f+7,8,2);
+p4(f-2,f-1,f,f+1,f+6,f+7,8,2);
+f=3;
+p4(f-2,f-1,f,f+1,f+5,f+6,9,1);
+p4(f-2,f-1,f,f+1,f+5,f+6,9,1);
+p4(f-2,f-1,f,f+1,f+5,f+6,9,1);
+p1();p1();p1();p1();
+show(g,h,p);
+
+if(p==1)
+for(let i=0;i<=13;i++)
+for(let j=0;j<=13;j++){
+document.getElementById("atciot2").innerHTML+=player_1[j].ocupat[i]+" "+j+" "+i+" | ";
+if(j==13){document.getElementById("atciot2").innerHTML+="</br>";}
+}}
+
+
+
+
+function random(t,l){
+m1=Math.floor(Math.random() * t);
+m1=m1+3;
+n1=Math.floor(Math.random() * t);
+n1=n1+3;
+
+d=Math.floor(Math.random() * 2);
+for(let i=0;i<=l;i++)
+for(let j=0;j<=l;j++)
+if(player[m1+i].ocupat[n1+j]==true||player[m1+i].umbra[n1+j]==true||m1==0&&n1==0)random(t,l);
+}
+
+
+
+function p4(f0,f1,f2,f3,f4,f5,r,l){//5 =n
+random(r,l);
+if(d==1){
+for(let i=0;i<=f2;i++){//5 =n
+if(i<=f0) player[m1+i].ocupat[n1]=true; //3=n-2
+
+my[i] = n1+1;
+mx[i+(f3)] =mx[i] = m1+i-1; //6=n+1
+my[i+(f3)] = n1-1;//5=n+1
+}
+mx[f4] = m1-1;//12=n+7
+my[f5] =my[f4] = n1;//12=n+8
+mx[f5] = m1+f1;//12=n+8
+}
+
+if(d==0){
+for(let i=0;i<=f2;i++){
+if(i<=f0) player[m1].ocupat[n1+i]=true; //2=n-2
+
+mx[i]=m1-1;
+my[i+f3]=my[i]=n1+i-1;
+mx[i+f3]=m1+1;
+}
+my[f4]=n1-1;
+mx[f5] =mx[f4]=m1;
+my[f5]=n1+f1;
+}
+
+for(var i=0;i<=f5;i++)
+for(var j=0;j<=f5;j++)
+
+if(mx[i]<0||my[j]<0){}else{
+if(player[mx[i]].ocupat[my[j]]!=true)
+player[mx[i]].umbra[my[j]]=true;
+}}
+
+
+function p1(){
+random(9,0);
+player[m1].ocupat[n1]=true;
+
+if(m1-1<0){
+if(player[m1+1].ocupat[n1]!=true) player[m1+1].umbra[n1]=true;
+
+if(player[m1].ocupat[n1-1]!=true) player[m1].umbra[n1-1]=true;
+
+if(player[m1+1].ocupat[n1-1]!=true) player[m1+1].umbra[n1-1]=true;
+
+if(player[m1+1].ocupat[n1+1]!=true) player[m1+1].umbra[n1+1]=true;
+
+if(player[m1].ocupat[n1+1]!=true) player[m1].umbra[n1+1]=true;
+}
+if(n1-1<0){
+if(player[m1-1].ocupat[n1]!=true) player[m1-1].umbra[n1]=true;
+
+if(player[m1+1].ocupat[n1+1]!=true) player[m1+1].umbra[n1+1]=true;
+
+if(player[m1].ocupat[n1+1]!=true) player[m1].umbra[n1+1]=true;
+
+if(player[m1+1].ocupat[n1]!=true) player[m1+1].umbra[n1]=true;
+
+if(player[m1-1].ocupat[n1+1]!=true) player[m1-1].umbra[n1+1]=true;
+}
+if(m1-1<0||n1-1<0){
+}else{
+if(player[m1].ocupat[n1-1]!=true) player[m1].umbra[n1-1]=true;
+
+if(player[m1+1].ocupat[n1-1]!=true) player[m1+1].umbra[n1-1]=true;
+
+if(player[m1-1].ocupat[n1+1]!=true) player[m1-1].umbra[n1+1]=true;
+
+if(player[m1+1].ocupat[n1]!=true) player[m1+1].umbra[n1]=true;
+
+if(player[m1].ocupat[n1+1]!=true) player[m1].umbra[n1+1]=true;
+
+if(player[m1+1].ocupat[n1+1]!=true) player[m1+1].umbra[n1+1]=true;
+
+if(player[m1-1].ocupat[n1]!=true) player[m1-1].umbra[n1]=true;
+
+if(player[m1-1].ocupat[n1-1]!=true) player[m1-1].umbra[n1-1]=true;
+}}
+
+
+function show(g,h,p){
+  for(let i=0;i<=13;i++)
+  for(let j=0;j<=13;j++){
+if(p==1){
+      player_1[i].umbra[j]=player[i].umbra[j];
+      player_1[i].ocupat[j]=player[i].ocupat[j];
+}if(p==2){
+      player_2[i].umbra[j]=player[i].umbra[j];
+      player_2[i].ocupat[j]=player[i].ocupat[j];
+}
+    if(player[i].ocupat[j]==true) $('#'+g+''+i+''+h+''+j).css("background","red");
+    if(player[i].umbra[j]==true)$('#'+g+''+i+''+h+''+j).css("opacity","0.5");
+    if(player[i].ocupat[j]!=true) $('#'+g+''+i+''+h+''+j).css("background","aqua");
+    if(player[i].umbra[j]!=true)$('#'+g+''+i+''+h+''+j).css("opacity","1");
+}}
+
+var n,m;
+var charX='', charY='';
+function findnm(t){
+ var nrstr='';
+
+if(t.length==6){
+nrstr=t[1]+t[2];
+n=parseInt(nrstr);
+nrstr=t[4]+t[5];
+m=parseInt(nrstr);
+//alert(n+' '+m);
+//x12y11
+//alert(player_1[n].ocupat[m]);
+charX=t[0]
+charY=t[3]
+
+}
+
+if(t.length==5){
+
+if(!isNaN(t[2])){
+//aici este pe p2 este cifra
+//x11y1
+charX=t[0]
+charY=t[3]
+
+nrstr=t[1]+t[2];
+n=parseInt(nrstr);
+nrstr=t[4];
+m=parseInt(nrstr);
+//alert(n+' '+m);
+//alert(player_1[n].ocupat[m]);
+
+
+
+
+}else{
+if(!isNaN(t[4])){
+//aici este pe p4 este cifra
+//x1y11
+nrstr=t[1];
+n=parseInt(nrstr);
+nrstr=t[3]+t[4];
+m=parseInt(nrstr);
+//alert(n+' '+m);
+//alert(player_1[n].ocupat[m]);
+charX=t[0]
+charY=t[2]
+
+}}}
+
+
+if(t.length==4){
+n=parseInt(t[1]);
+m=parseInt(t[3]);
+//alert(n+' '+m);
+//x1y2
+charX=t[0]
+charY=t[2]
+
+}}
+var s1=1,z1=1,s2=1,z2=1;
+
+function pok1(t){
+findnm(t);
+
+if(player_1[n].pok[m]!=true){
+if(q==1||q==0){
+player_1[n].pok[m]=true;
+
+if(player_1[n].ocupat[m]==true){
+$("#"+t+"").css("background","red");
+
+row_or_column(t);
+
+}else{ q=2; 
+$("#"+t).css("opacity","0.5");
+$("#player_2").css("background","black");
+$("#player_1").css("background","orange");
+
+}
+}else alert("aici nu mai aveti voie sa tastati");
+}}
+
+
+
+
+function pok2(t){
+findnm(t);
+
+if(player_2[n].pok[m]!=true){
+if(q==2||q==0){
+player_2[n].pok[m]=true; 
+
+if(player_2[n].ocupat[m]==true){
+$("#"+t+"").css("background","red");
+
+row_or_column(t);
+
+
+}else{ q=1; 
+$("#"+t).css("opacity","0.5"); 
+$("#player_1").css("background","black");
+$("#player_2").css("background","orange");
+}
+}else alert("aici nu mai aveti voie sa tastati");
+}}
+
+function fu_zs(t,val){
+
+if(t[0]=="x"){
+if(val==true)
+s1++;
+if(val==false)
+z1++;
+}
+
+if(t[0]=="m"){
+if(val==true)
+s2++;
+if(val==false)
+z2++;
+      }}
+
+var t2=false;
+function row_or_column(t){
+
+var t1=false;
+var y=true;
+findnm(t);
+
+
+
+
+
+if(t[0]=="x"){
+
+  for(let i=0;i<=15;i++)
+  for(let j=0;j<=15;j++){
+      player[i].umbra[j]=player_1[i].umbra[j];
+      player[i].ocupat[j]=player_1[i].ocupat[j];
+      player[i].pok[j]=player_1[i].pok[j];
+      player[i].sh[j]=player_1[i].sh[j];
+
+}}
+if(t[0]=="m"){
+  for(let i=0;i<=15;i++)
+  for(let j=0;j<=15;j++){
+      player[i].umbra[j]=player_2[i].umbra[j];
+      player[i].ocupat[j]=player_2[i].ocupat[j];
+      player[i].pok[j]=player_2[i].pok[j];
+      player[i].sh[j]=player_2[i].sh[j];
+
+}
+}
+if(player[n].ocupat[m+1]==true || player[n].ocupat[m-1]==true)y=false;   
+if(player[n+1].ocupat[m]==true || player[n-1].ocupat[m]==true)y=true;    
+
+
+
+if(y==true){
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-
+
+
+
+if(player[n+1].ocupat[m]==true  &&  player[n+1].pok[m]!=true){
+//alert("dreapta");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}else{
+if(player[n+2].ocupat[m]==true  &&  player[n+2].pok[m]!=true && player[n+1].pok[m]==true){
+//alert("dreapta peste 2");
+
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}else{
+if(player[n+3].ocupat[m]==true  &&  player[n+3].pok[m]!=true && player[n+1].pok[m]==true && player[n+2].pok[m]==true){
+//alert("dreapta peste 3");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}}}
+
+if(player[n-1].ocupat[m]==true && player[n-1].pok[m]!=true){
+//alert("stinga");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}else{
+if(player[n-2].ocupat[m]==true && player[n-2].pok[m]!=true && player[n-1].pok[m]==true){
+//alert("stinga peste 2");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}else{
+if(player[n-3].ocupat[m]==true && player[n-3].pok[m]!=true && player[n-1].pok[m]==true && player[n-2].pok[m]==true){ 
+//alert("stinga peste 3"); 
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0; 
+}}}}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-
+
+
+if(y==false){
+if(player[n].ocupat[m+1]==true  &&  player[n].pok[m+1]!=true){
+//alert("jos");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}else{
+if(player[n].ocupat[m+2]==true  &&  player[n].pok[m+2]!=true && player[n].pok[m+1]==true){
+//alert("jos peste 2");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}else{
+if(player[n].ocupat[m+3]==true  &&  player[n].pok[m+3]!=true && player[n].pok[m+1]==true && player[n].pok[m+2]==true){
+//alert("jos peste 3");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}}}
+
+if(player[n].ocupat[m-1]==true && player[n].pok[m-1]!=true){
+//alert("sus");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}else{
+if(player[n].ocupat[m-2]==true && player[n].pok[m-2]!=true && player[n].pok[m-1]==true){
+//alert("sus peste 2");
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0;
+}else{
+if(player[n].ocupat[m-3]==true && player[n].pok[m-3]!=true && player[n].pok[m-1]==true && player[n].pok[m-2]==true){ 
+//alert("sus peste 3"); 
+fu_zs(t,y);
+t1=true;
+big_shadow(t);
+return 0; 
+}}}}
+
+
+if(t1==false){
+var vic=0;
+big_shadow(t);
+for(let i=3;i<=12;i++)
+for(let j=3;j<=12;j++){
+if(player[i].ocupat[j]==true&&player[i].pok[j]==true)vic++;
+
+if(player[i].sh[j]==true){
+player[i].pok[j]=true;
+$("#"+charX+(i)+charY+(j)).css("opacity","0.5");
+}}
+
+if(vic==20){
+alert('playerul '+t+' a castigat')
+}
+returnvalues(t);
+
+if(t[0]=="x"){
+z1=1;
+s1=1;
+}
+if(t[0]=="m"){
+z2=1;
+s2=1;
+}}}
+
+function big_shadow(t){
+findnm(t);
+if((s1>1||z1>1)||(s2>1||z2>1)){
+if(player[n].ocupat[m-1]!=true){
+player[n].sh[m-1]=true;
+if(player[n].ocupat[m+1]==true){
+player[n+1].sh[m-1]=true;
+player[n-1].sh[m-1]=true;
+}}
+
+if(player[n].ocupat[m+1]!=true){
+player[n].sh[m+1]=true;
+if(player[n].ocupat[m-1]==true){
+player[n+1].sh[m+1]=true;
+player[n-1].sh[m+1]=true;
+}}
+
+if(player[n+1].ocupat[m]!=true){
+player[n+1].sh[m]=true;
+if(player[n-1].ocupat[m]==true){
+player[n+1].sh[m+1]=true;
+player[n+1].sh[m-1]=true;
+}}
+
+if(player[n-1].ocupat[m]!=true){
+player[n-1].sh[m]=true;
+if(player[n+1].ocupat[m]==true){
+player[n-1].sh[m+1]=true;
+player[n-1].sh[m-1]=true;
+}}}
+
+if(player[n].ocupat[m-1]==true || player[n].ocupat[m+1]==true || player[n+1].ocupat[m]==true || player[n-1].ocupat[m]==true){}else{
+player[n-1].sh[m+1]=true;
+player[n-1].sh[m-1]=true;
+player[n+1].sh[m+1]=true;
+player[n+1].sh[m-1]=true;
+player[n-1].sh[m]=true;
+player[n+1].sh[m]=true;
+player[n].sh[m-1]=true;
+player[n].sh[m+1]=true;
+}
+
+returnvalues(t);
+}
+
+function returnvalues(t){
+      if(t[0]=="x"){
+
+  for(let i=0;i<=15;i++)
+  for(let j=0;j<=15;j++){
+      player_1[i].umbra[j]=player[i].umbra[j];
+      player_1[i].ocupat[j]=player[i].ocupat[j];
+      player_1[i].pok[j]=player[i].pok[j];
+      player_1[i].sh[j]=player[i].sh[j];
+}}
+
+if(t[0]=="m"){
+  for(let i=0;i<=15;i++)
+  for(let j=0;j<=15;j++){
+      player_2[i].umbra[j]=player[i].umbra[j];
+      player_2[i].ocupat[j]=player[i].ocupat[j];
+      player_2[i].pok[j]=player[i].pok[j];
+      player_2[i].sh[j]=player[i].sh[j];
+
+}}}
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+.platform{
+
+display: grid;
+grid-template-areas:    'player_1 player_1 player_2 player_2'
+                        'buton_change_player_1  buton_play_player_1 buton_change_player_2 buton_play_player_2'
+}
+
+.player_1{
+      grid-area: player_1;
+}
+
+.player_2{
+      grid-area: player_2;
+}
+
+.buton_change_player_1{
+      grid-area: buton_change_player_1;
+width: 191px;
+margin-top: 20px;
+height: 30px;
+}
+
+.buton_play_player_1{
+      grid-area: buton_play_player_1;
+width: 191px;
+margin-top: 20px;
+height: 30px;
+
+}
+
+
+.buton_change_player_2{
+      grid-area: buton_change_player_2;
+width: 191px;
+margin-top: 20px;
+height: 30px;
+}
+
+
+.buton_play_player_2{
+grid-area: buton_play_player_2;
+width: 191px;
+margin-top: 20px;
+height: 30px;
+
+}
+
+
+
+
+
+/*  and (max-height: 400px) */
+
+
+@media only screen and (max-width: 1200px) {
+
+.platform{
+      display: grid;
+grid-template-areas:    'player_1 buton_change_player_1'
+                        'player_1 buton_play_player_1'
+                        'player_2 buton_change_player_2'
+                        'player_2 buton_play_player_2'
+}
+
+.player_1{
+      grid-area: player_1;
+}
+
+.player_2{
+      margin-top: 100px;
+      grid-area: player_2;
+}
+
+.buton_change_player_1{
+
+grid-area: buton_change_player_1;
+width: 191px;
+margin-top: 20px;
+height: 30px;
+}
+
+.buton_play_player_1{
+      grid-area: buton_play_player_1;
+width: 191px;
+margin-top: 20px;
+height: 30px;
+
+}
+
+
+.buton_change_player_2{
+      grid-area: buton_change_player_2;
+width: 191px;
+margin-top: 120px;
+height: 30px;
+}
+
+
+.buton_play_player_2{
+grid-area: buton_play_player_2;
+width: 191px;
+margin-top: 20px;
+height: 30px;
+
+}
+
+}
+
+</style>
+
+</body>
+
+
+
+
+
+
+
+
